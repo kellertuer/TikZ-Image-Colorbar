@@ -1,0 +1,81 @@
+% ---
+% Adding colorbars and axes to png included graphics, e.g. from matlab
+% ---
+% R. Bergmann ~ 2014-05-10
+\documentclass{scrartcl}
+\usepackage{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{tikz,pgfkeys}
+\definecolor{red0hsb}{hsb}{0,1,1}
+\definecolor{red1hsb}{hsb}{1,1,1}
+\definecolor{greenhsb}{hsb}{0.33,1,1}
+\definecolor{bluehsb}{hsb}{0.66,1,1}
+
+\pgfkeys{/ICBVar/.is family,%
+	/ICBVar,%
+	position/.estore in = \ICBpos,%
+	width/.estore in = \ICBwidth,%
+	node/.store in = \ICBParent,
+	yticks/.store in = \ICByTicks,
+}
+\pgfkeys{/ICBVar, default/.style={%
+	width=0.025,%
+	position=.05,%
+	% Usual long version, 
+	yticks={0/{$-\pi$},.25/{$-\frac{\pi}{2}$},.5/{0},.75/{$\frac{\pi}{2}$},1/{$\pi$}}
+	}}
+\makeatletter
+\newcommand{\ImageColorbar}[1][]{%
+	\pgfkeys{/ICBVar, default, #1}
+	\ifcsname\ICBParent\endcsname
+		\errmessage{ImageColormap: No parent node given.}
+	\fi
+	\begin{scope}[x={(\ICBParent.south east)},y={(\ICBParent.north west)}]
+		%Shadings - TODO encapsulate and provide more than HSV
+		% This is the HSV shading
+%		\shade[top color=red1hsb, bottom color=bluehsb] (1+\ICBpos-\ICBwidth/2,.66) rectangle (1+\ICBpos+\ICBwidth/2,1);
+%		\shade[top color=bluehsb, bottom color=greenhsb] (1+\ICBpos-\ICBwidth/2,.33) rectangle (1+\ICBpos+\ICBwidth/2,.665);
+%		\shade[top color=greenhsb, bottom color=red0hsb] (1+\ICBpos-\ICBwidth/2,0) rectangle (1+\ICBpos+\ICBwidth/2,.33);
+%		& This is the shading for the example
+		\shade[top color=blue, bottom color=white] (1+\ICBpos-\ICBwidth/2,.5) rectangle (1+\ICBpos+\ICBwidth/2,1);
+		\shade[top color=white, bottom color=red] (1+\ICBpos-\ICBwidth/2,0) rectangle (1+\ICBpos+\ICBwidth/2,.5);
+		
+		% Frame
+		\draw[ICBFrame] (1+\ICBpos-\ICBwidth/2,0) rectangle (1+\ICBpos+\ICBwidth/2,1);
+		% ticks
+		\foreach \yt/\yl in \ICByTicks
+		{
+			\draw[very thin, black] (1+\ICBpos,\yt) -- (1+\ICBpos+\ICBwidth/2,\yt) node [ICBLabel] {\yl};
+		}
+	% \node at (1.075,1) [ICBlabel] {$\pi$};
+	% \node at (1.075,.75) [ICBlabel] {$\frac{\pi}{2}$};
+	% \node at (1.075,.5) [ICBlabel] {$0$};
+	% \node at (1.075,.25) [ICBlabel] {$-\frac{\pi}{2}$};
+	% \node at (1.075,0) [ICBlabel] {$-\pi$};
+	% \draw[very thin, black] (1.025,0) -- (1.075,0) -- (1.075,1) -- (1.025,1) -- cycle;
+	% \draw[very thin, black] (1.0583,.25) -- (1.075,0.25);
+	% \draw[very thin, black] (1.0583,.5) -- (1.075,0.5);
+	% \draw[very thin, black] (1.0583,.75) -- (1.075,0.75);
+	\end{scope}
+}
+\makeatother
+% Styling
+\tikzstyle{ICBLabel}=[right=-1pt,font=\tiny]
+\tikzstyle{ICBFrame}=[thin, black]
+%
+\begin{document}
+	\begin{figure}[tbp]\centering
+		\begin{tikzpicture}
+			% No inner sep
+			% draw thin border
+			\node[anchor=south west,inner sep=0pt,draw=black!50,thin] (image) at (0,0) {%
+				\includegraphics[width=.6\textwidth]{waves.png}
+			};
+		\ImageColorbar[node=image%
+		% Forms %/{label}, i.e. for the middle 0.5/{0} for the middle
+		%, yticks={0,0.5,1}
+		]
+		\end{tikzpicture}
+	\end{figure}
+\end{document}
