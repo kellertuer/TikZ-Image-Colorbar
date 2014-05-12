@@ -70,29 +70,31 @@
 		% Frame
 		\draw[ICBFrame] (1+\ICBpos-\ICBwidth/2,0) rectangle (1+\ICBpos+\ICBwidth/2,1);
 		% Ticks - divide into ticks & marks?
-		\pgfmathsetmacro{\step}{}
 		\pgfmathparse{int(abs(\ICByMin)+abs(\ICByMax))}
-		\if\pgfmathresult=0
+		\if\pgfmathresult0
 			\foreach \yt/\yl in \ICByTicks
 				\draw[very thin, black] (1+\ICBpos,\yt) -- %
 				(1+\ICBpos+\ICBwidth/2,\yt) node [ICBLabel] {\yl};
 		\else
-			\foreach \t in {1,...,\ICByTicks}
-			{
-				\ifICByAtB
-					\pgfmathparse{(\t-1)/(\ICByTicks-1)}
-					\pgfmathsetmacro{\actpos}{\pgfmathresult}
-					\pgfmathparse{\ICByMin + (\ICByMax-\ICByMin)/(\ICByTicks-1)*(\t-1)}
-					\pgfmathsetmacro{\actval}{\pgfmathresult}
-				\else
-					\pgfmathparse{1/(2*\ICByTicks)+(\t-1)/\ICByTicks}
-					\pgfmathsetmacro{\actpos}{\pgfmathresult}
-					\pgfmathparse{\ICByMin + (\ICByMax-\ICByMin)*( 1/(2*\ICByTicks) + (\t-1)/\ICByTicks}
-					\pgfmathsetmacro{\actval}{\pgfmathresult}
-				\fi
-				\draw[very thin, black] (1+\ICBpos,\actpos) %
+			% If you specify Min & Max (y range) y ticks has to be an integer!
+			\pgfmathifisint{\ICByTicks}{
+				\foreach \t in {1,...,\ICByTicks}
+				{
+					\ifICByAtB
+						\pgfmathparse{(\t-1)/(\ICByTicks-1)}
+						\pgfmathsetmacro{\actpos}{\pgfmathresult}
+						\pgfmathparse{\ICByMin + (\ICByMax-\ICByMin)/(\ICByTicks-1)*(\t-1)}
+						\pgfmathsetmacro{\actval}{\pgfmathresult}
+					\else
+						\pgfmathparse{1/(2*\ICByTicks)+(\t-1)/\ICByTicks}
+						\pgfmathsetmacro{\actpos}{\pgfmathresult}
+						\pgfmathparse{\ICByMin + (\ICByMax-\ICByMin)*( 1/(2*\ICByTicks) + (\t-1)/\ICByTicks}
+						\pgfmathsetmacro{\actval}{\pgfmathresult}
+						\fi
+					\draw[very thin, black] (1+\ICBpos,\actpos) %
 				-- (1+\ICBpos+\ICBwidth/2,\actpos) node [ICBLabel] {\pgfmathprintnumber{\actval}};
 			}
+		}{\errmessage{ImageColormap: If you specify an y range, y ticks has to be an integer.}}
 		\fi
 	\end{scope}
 }
@@ -112,11 +114,11 @@
 			};
 		\NodeColorbar[node=image%
 		% Forms %/{label}, i.e. for the middle 0.5/{0} for the middle
-		%, yticks={0,0.5,1}
+%		, y ticks={0,0.5,1}
 		,colors=rwb
 		,y ticks=5
-		,y range=0.001 to 0.006,
-%		,y tick at border=true
+		,y range=0.001 to 0.006
+		,y tick at border=true
 		]
 		\end{tikzpicture}
 	\end{figure}
