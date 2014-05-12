@@ -11,52 +11,60 @@
 \definecolor{red1hsb}{hsb}{1,1,1}
 \definecolor{greenhsb}{hsb}{0.33,1,1}
 \definecolor{bluehsb}{hsb}{0.66,1,1}
-
+%
+%
+% Define keys for the main command of the colorbar
 \pgfkeys{/ICBVar/.is family,%
 	/ICBVar,%
 	position/.estore in = \ICBpos,%
 	width/.estore in = \ICBwidth,%
 	node/.store in = \ICBParent,
 	yticks/.store in = \ICByTicks,
+	% list containing startvalue/startcolor/endvalue/endtolor
+	colorbar/.store in = \ICBColorbarMap
 }
+% colors is the named version for colorbar=
+\pgfkeys{/ICBVar/colors/.cd,.is choice,
+	gray/.style = {/ICBVar/colorbar={0/black/1/white}},
+	hsv/.style = {/ICBVar/colorbar={0/red0hsb/.33/greenhsb,%
+		0.33/greenhsb/.66/bluehsb, .66/bluehsb/1/red1hsb}},
+	jet/.style = {/ICBVar/colorbar={0/blue!50!black/.125/blue,%
+		.125/blue/.375/cyan, .375/cyan/.625/yellow, .625/yellow/.875/red,%
+		.875/red/1/red!50!black}},
+	rwb/.style = {/ICBVar/colorbar={0/red/.5/white, .5/white/1/blue}}
+}
+% ---------
+%
+% Set default values for the main command \NodeColorbar
 \pgfkeys{/ICBVar, default/.style={%
 	width=0.025,%
 	position=.05,%
 	% Usual long version, 
-	yticks={0/{$-\pi$},.25/{$-\frac{\pi}{2}$},.5/{0},.75/{$\frac{\pi}{2}$},1/{$\pi$}}
+	yticks={0/{$-\pi$},.25/{$-\frac{\pi}{2}$},.5/{0},.75/{$\frac{\pi}{2}$},1/{$\pi$}},
+	colors=hsv
 	}}
 \makeatletter
-\newcommand{\ImageColorbar}[1][]{%
+%
+% Define the main command
+\newcommand{\NodeColorbar}[1][]{%
 	\pgfkeys{/ICBVar, default, #1}
 	\ifcsname\ICBParent\endcsname
 		\errmessage{ImageColormap: No parent node given.}
 	\fi
 	\begin{scope}[x={(\ICBParent.south east)},y={(\ICBParent.north west)}]
-		%Shadings - TODO encapsulate and provide more than HSV
-		% This is the HSV shading
-%		\shade[top color=red1hsb, bottom color=bluehsb] (1+\ICBpos-\ICBwidth/2,.66) rectangle (1+\ICBpos+\ICBwidth/2,1);
-%		\shade[top color=bluehsb, bottom color=greenhsb] (1+\ICBpos-\ICBwidth/2,.33) rectangle (1+\ICBpos+\ICBwidth/2,.665);
-%		\shade[top color=greenhsb, bottom color=red0hsb] (1+\ICBpos-\ICBwidth/2,0) rectangle (1+\ICBpos+\ICBwidth/2,.33);
-%		& This is the shading for the example
-		\shade[top color=blue, bottom color=white] (1+\ICBpos-\ICBwidth/2,.5) rectangle (1+\ICBpos+\ICBwidth/2,1);
-		\shade[top color=white, bottom color=red] (1+\ICBpos-\ICBwidth/2,0) rectangle (1+\ICBpos+\ICBwidth/2,.5);
-		
+	% Colormap - use known shading
+	% for each start color, start value, end color, end value in the colormap
+	% (reads bottom to top)
+	\foreach \sv/\sc/\ev/\ec in \ICBColorbarMap
+		\shade[bottom color=\sc, top color=\ec] (1+\ICBpos-\ICBwidth/2,\sv)%
+			 rectangle (1+\ICBpos+\ICBwidth/2,\ev);
 		% Frame
 		\draw[ICBFrame] (1+\ICBpos-\ICBwidth/2,0) rectangle (1+\ICBpos+\ICBwidth/2,1);
-		% ticks
+		% Ticks - divide into ticks & marks?
 		\foreach \yt/\yl in \ICByTicks
 		{
 			\draw[very thin, black] (1+\ICBpos,\yt) -- (1+\ICBpos+\ICBwidth/2,\yt) node [ICBLabel] {\yl};
 		}
-	% \node at (1.075,1) [ICBlabel] {$\pi$};
-	% \node at (1.075,.75) [ICBlabel] {$\frac{\pi}{2}$};
-	% \node at (1.075,.5) [ICBlabel] {$0$};
-	% \node at (1.075,.25) [ICBlabel] {$-\frac{\pi}{2}$};
-	% \node at (1.075,0) [ICBlabel] {$-\pi$};
-	% \draw[very thin, black] (1.025,0) -- (1.075,0) -- (1.075,1) -- (1.025,1) -- cycle;
-	% \draw[very thin, black] (1.0583,.25) -- (1.075,0.25);
-	% \draw[very thin, black] (1.0583,.5) -- (1.075,0.5);
-	% \draw[very thin, black] (1.0583,.75) -- (1.075,0.75);
 	\end{scope}
 }
 \makeatother
@@ -72,9 +80,10 @@
 			\node[anchor=south west,inner sep=0pt,draw=black!50,thin] (image) at (0,0) {%
 				\includegraphics[width=.6\textwidth]{waves.png}
 			};
-		\ImageColorbar[node=image%
+		\NodeColorbar[node=image%
 		% Forms %/{label}, i.e. for the middle 0.5/{0} for the middle
 		%, yticks={0,0.5,1}
+		, colors=rwb
 		]
 		\end{tikzpicture}
 	\end{figure}
