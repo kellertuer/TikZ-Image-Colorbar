@@ -26,7 +26,7 @@
 	y ticks/.store in = \ICByTicks,
 	% define range as min to max
 	y range/.code args={#1 to #2}{\pgfmathsetmacro{\ICByMin}{#1}\pgfmathsetmacro{\ICByMax}{#2}},
-	y tick at border/.is if=ifICByAtB,
+	y tick at border/.is if=ICByAtB,
 	y tick at border/.default=false,
 	% list containing startvalue/startcolor/endvalue/endtolor
 	colorbar/.store in = \ICBColorbarMap
@@ -115,10 +115,10 @@
 			};
 		\NodeColorbar[node=image%
 		% Forms %/{label}, i.e. for the middle 0.5/{0} for the middle
-		, y ticks={0,0.5,1}
+%		,y ticks={0,0.5,1}
 		,colors=rwb
-%		,y ticks=5
-%		,y range=0.001 to 0.006
+		,y ticks=5
+		,y range=0.1 to 0.6
 %		,y tick at border=true
 		]
 		\end{tikzpicture}
