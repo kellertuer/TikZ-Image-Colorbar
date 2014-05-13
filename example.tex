@@ -5,8 +5,8 @@
 \documentclass{scrartcl}
 \usepackage{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}
-\usepackage{tikz,pgfkeys,pgfmath}
+\usepackage{graphicx,caption}
+\usepackage{tikz,pgfkeys,pgfmath,xargs}
 \definecolor{red0hsb}{hsb}{0,1,1}
 \definecolor{red1hsb}{hsb}{1,1,1}
 \definecolor{greenhsb}{hsb}{0.33,1,1}
@@ -79,7 +79,7 @@
 		\else
 			% If you specify Min & Max (y range) y ticks has to be an integer!
 			\pgfmathifisint{\ICByTicks}{
-				\foreach \t in {1,...,\ICByTicks}
+				\foreach \t in {1,2,...,\ICByTicks}
 				{
 					\ifICByAtB
 						\pgfmathparse{(\t-1)/(\ICByTicks-1)}
@@ -99,11 +99,23 @@
 		\fi
 	\end{scope}
 }
+\newcommandx{\includegraphicsWithColorbar}[3][1=\empty, 2=\empty]{
+% (fold)
+	\begin{tikzpicture}
+		\node[anchor=south west, ICBImage] (localICBImageNode) at (0,0) {%
+			\includegraphics[#2]{#3}
+		};
+		\NodeColorbar[node=localICBImageNode,#1]
+	\end{tikzpicture}
+% (end)
+}
+
 \makeatother
 % Styling
 \tikzstyle{ICBLabel}=[right=-1pt,font=\tiny]
 \tikzstyle{ICBFrame}=[thin, black]
-\pgfkeys{/pgf/number format/.cd,std,fixed zerofill,precision=2}
+\tikzstyle{ICBImage}=[inner sep=0,thick, black]
+\pgfkeys{/pgf/number format/.cd,std,fixed zerofill,precision={2}}
 %
 \begin{document}
 	\begin{figure}[tbp]\centering
@@ -111,16 +123,21 @@
 			% No inner sep
 			% draw thin border
 			\node[anchor=south west,inner sep=0pt,draw=black!50,thin] (image) at (0,0) {%
-				\includegraphics[width=.6\textwidth]{waves.png}
+				\includegraphics[width=.5\textwidth]{waves.png}
 			};
 		\NodeColorbar[node=image%
 		% Forms %/{label}, i.e. for the middle 0.5/{0} for the middle
 %		,y ticks={0,0.5,1}
 		,colors=rwb
 		,y ticks=5
-		,y range=0.1 to 0.6
+		,y range=-1 to 1
 %		,y tick at border=true
 		]
 		\end{tikzpicture}
+		\caption{Just using the NodeColorBar}
+	\end{figure}
+	\begin{figure}[tbp]\centering
+		\includegraphicsWithColorbar[colors=rwb, y ticks=6, y range=-5 to 5, y tick at border=true][width=.5\textwidth]{waves.png}
+		\caption{Using IncludeGraphicsWithColorbar}
 	\end{figure}
 \end{document}
