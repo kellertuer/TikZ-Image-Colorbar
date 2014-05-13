@@ -1,5 +1,7 @@
 % ---
 % Adding colorbars and axes to png included graphics, e.g. from matlab
+%
+% See readme.md for details & license
 % ---
 % R. Bergmann ~ 2014-05-10
 \documentclass{scrartcl}
@@ -7,6 +9,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx,caption}
 \usepackage{tikz,pgfkeys,pgfmath,xargs}
+% --- snip
+% copy this part to your document (until the next snip)
+%
+% Colors neededn in the color bars
 \definecolor{red0hsb}{hsb}{0,1,1}
 \definecolor{red1hsb}{hsb}{1,1,1}
 \definecolor{greenhsb}{hsb}{0.33,1,1}
@@ -74,7 +80,7 @@
 		% Dieses If funktioniert noch nicht!
 		\ifdim\pgfmathresult pt = 0 pt
 			\foreach \yt/\yl in \ICByTicks
-				\draw[very thin, black] (1+\ICBpos,\yt) -- %
+				\draw[ICBTick] (1+\ICBpos,\yt) -- %
 				(1+\ICBpos+\ICBwidth/2,\yt) node [ICBLabel] {\yl};
 		\else
 			% If you specify Min & Max (y range) y ticks has to be an integer!
@@ -112,11 +118,12 @@
 
 \makeatother
 % Styling
+\tikzstyle{ICBLabel}=[very thin, black]
 \tikzstyle{ICBLabel}=[right=-1pt,font=\tiny]
 \tikzstyle{ICBFrame}=[thin, black]
 \tikzstyle{ICBImage}=[inner sep=0,thick, black]
 \pgfkeys{/pgf/number format/.cd,std,fixed zerofill,precision={2}}
-%
+% --- snip
 \begin{document}
 	\begin{figure}[tbp]\centering
 		\begin{tikzpicture}
@@ -137,7 +144,8 @@
 		\caption{Just using the NodeColorBar}
 	\end{figure}
 	\begin{figure}[tbp]\centering
-		\includegraphicsWithColorbar[colors=rwb, y ticks=6, y range=-5 to 5, y tick at border=true][width=.5\textwidth]{waves.png}
+		\includegraphicsWithColorbar[colors=rwb, y ticks=6, y range=-5 to 5,%
+			 y tick at border=true][width=.5\textwidth]{waves.png}
 		\caption{Using IncludeGraphicsWithColorbar}
 	\end{figure}
 \end{document}
