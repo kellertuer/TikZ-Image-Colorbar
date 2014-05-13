@@ -40,13 +40,12 @@
 %\pgfkeys{/ICBVar/y ticks/.add code ={}{\ICByTickNum=0}}
 % colors is the named version for colorbar=
 \pgfkeys{/ICBVar/colors/.cd,.is choice,
-	gray/.style = {/ICBVar/colorbar={0/black/1/white}},
-	hsv/.style = {/ICBVar/colorbar={0/red0hsb/.33/greenhsb,%
-		0.33/greenhsb/.66/bluehsb, .66/bluehsb/1/red1hsb}},
-	jet/.style = {/ICBVar/colorbar={0/blue!50!black/.125/blue,%
-		.125/blue/.375/cyan, .375/cyan/.625/yellow, .625/yellow/.875/red,%
-		.875/red/1/red!50!black}},
-	rwb/.style = {/ICBVar/colorbar={0/red/.5/white, .5/white/1/blue}}
+	gray/.style = {/ICBVar/colorbar={0/black,1/white}},
+	hsv/.style = {/ICBVar/colorbar={0/red0hsb,.33/greenhsb,.66/bluehsb,%
+		1/red1hsb}},
+	jet/.style = {/ICBVar/colorbar={0/blue!50!black,.125/blue,.375/cyan,%
+		.625/yellow,.875/red,1/red!50!black}},
+	rwb/.style = {/ICBVar/colorbar={0/red,.5/white,1/blue}}
 }
 
 % ---------
@@ -70,9 +69,18 @@
 	% Colormap - use known shading
 	% for each start color, start value, end color, end value in the colormap
 	% (reads bottom to top)
-	\foreach \sv/\sc/\ev/\ec in \ICBColorbarMap
-		\shade[bottom color=\sc, top color=\ec] (1+\ICBpos-\ICBwidth/2,\sv)%
-			 rectangle (1+\ICBpos+\ICBwidth/2,\ev);
+	\foreach \v/\c [remember=\v as \lastv (initially 0),remember=\c as \lastc] in \ICBColorbarMap
+	{
+		\pgfmathparse{\v>0}
+		% Dieses If funktioniert noch nicht!
+		\ifdim\pgfmathresult pt = 0 pt
+			\relax
+		\else
+			\shade[bottom color=\lastc, top color=\c] %
+				(1+\ICBpos-\ICBwidth/2,\lastv) rectangle %
+				(1+\ICBpos+\ICBwidth/2,\v);
+		\fi
+		}
 		% Frame
 		\draw[ICBFrame] (1+\ICBpos-\ICBwidth/2,0) rectangle (1+\ICBpos+\ICBwidth/2,1);
 		% Ticks - divide into ticks & marks?
@@ -144,7 +152,7 @@
 		\caption{Just using the NodeColorBar}
 	\end{figure}
 	\begin{figure}[tbp]\centering
-		\includegraphicsWithColorbar[colors=rwb, y ticks=6, y range=-5 to 5,%
+		\includegraphicsWithColorbar[colors=hsv, y ticks=6, y range=-5 to 5,%
 			 y tick at border=true][width=.5\textwidth]{waves.png}
 		\caption{Using IncludeGraphicsWithColorbar}
 	\end{figure}

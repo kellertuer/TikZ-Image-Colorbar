@@ -21,9 +21,9 @@ besides (left) to the node adopting its height.
 	right of the position determines the width (hence position-width/2 should be
 	greater than 0)
 * `colorbar` provide your own colorbar manually (you also can add this to the
-	`colors` key, see next), by specifying each color fading yourself with four
-	values: startvalue/startcolor/endvalue/endcolor, where start and endvalue are
-	in [0,1] and the colors are xcolors
+	`colors` key, see next), by specifying each color fading yourself with tuples
+	of two: value/color, where the first value must be 0, the values should be
+	increasing and the last one should be 1. The colors are just xcolors
 * `colors` sets the `colorbar` key directly with predefined styles, which are up
 	to now
 	* `gray` black (0) to white (1) colorbar
@@ -65,9 +65,12 @@ parameters are
 * `ICBTick` styling for the ticks
 
 ## Limitations & Possible Extensions
+* The code was only tested using TikZ 3.0.0
 * works up to now only if the node is set `anchor=south west`
 * in certain ranges (i.e. -0.5 to 0.5) there are rounding errors, when
 	specifying an odd number of ticks for the value of 0.
+* The Ticks-Type is up to now covering the right half of the colorbar. This could
+be individualized maybe by drawing the complete line and defining a dash-pattern
 
 ## License
 This small code snipped is published under the Beer/Coffee ware license as
