@@ -40,6 +40,7 @@
 %\pgfkeys{/ICBVar/y ticks/.add code ={}{\ICByTickNum=0}}
 % colors is the named version for colorbar=
 \pgfkeys{/ICBVar/colors/.cd,.is choice,
+	invgray/.style = {/ICBVar/colorbar={0/white,1/black}},
 	gray/.style = {/ICBVar/colorbar={0/black,1/white}},
 	hsv/.style = {/ICBVar/colorbar={0/red0hsb,.33/greenhsb,.66/bluehsb,%
 		1/red1hsb}},
@@ -126,7 +127,7 @@
 
 \makeatother
 % Styling
-\tikzstyle{ICBLabel}=[very thin, black]
+\tikzstyle{ICBTick}=[very thin, black]
 \tikzstyle{ICBLabel}=[right=-1pt,font=\tiny]
 \tikzstyle{ICBFrame}=[thin, black]
 \tikzstyle{ICBImage}=[inner sep=0,thick, black]
@@ -152,7 +153,7 @@
 		\caption{Just using the NodeColorBar}
 	\end{figure}
 	\begin{figure}[tbp]\centering
-		\includegraphicsWithColorbar[colors=hsv, y ticks=6, y range=-5 to 5,%
+		\includegraphicsWithColorbar[colors=rwb, y ticks=6, y range=-5 to 5,%
 			 y tick at border=true][width=.5\textwidth]{waves.png}
 		\caption{Using IncludeGraphicsWithColorbar}
 	\end{figure}
