@@ -45,7 +45,8 @@ besides (left) to the node adopting its height.
 		appearance of numbers.
 	2. each tick is given as a tuple position/label, where position is relative,
 		i.e. a value in [0,1] and label is a text or math to be displayed at the
-		ticks end
+		ticks end.
+		Example: `y ticks = {0/{\(pi\)}, 0.5/{\(0\)}, 1/{\(\pi\)}}`
 
 ### `\includegraphicsWithColorbar`
 Combines the `\NodeColorbar` and provides an interface to directly specify the
