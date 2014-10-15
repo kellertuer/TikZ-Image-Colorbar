@@ -12,11 +12,23 @@
 % --- snip
 % copy this part to your document (until the next snip)
 %
-% Colors neededn in the color bars
+%
+% Definition of Colors for the colo rbars
+% HSV
 \definecolor{red0hsb}{hsb}{0,1,1}
 \definecolor{red1hsb}{hsb}{1,1,1}
 \definecolor{greenhsb}{hsb}{0.33,1,1}
 \definecolor{bluehsb}{hsb}{0.66,1,1}
+% Parula
+\definecolor{parula00}{rgb}{0.2081,0.1663,0.5292}
+\definecolor{parula0125}{rgb}{0.0146,0.3845,0.8813}
+\definecolor{parula025}{rgb}{0.0795,0.5159,0.8328}
+\definecolor{parula0375}{rgb}{0.0228,0.6492,0.7823}
+\definecolor{parula05}{rgb}{0.1986,0.7214,0.6310}
+\definecolor{parula0625}{rgb}{0.5456,0.7490,0.4597}
+\definecolor{parula075}{rgb}{0.8266,0.7320,0.3464}
+\definecolor{parula0875}{rgb}{0.9948,0.7886,0.1943}
+\definecolor{parula10}{rgb}{0.9763,0.9831,0.0538}
 %
 %
 % Define keys for the main command of the colorbar
@@ -39,16 +51,16 @@
 }
 %\pgfkeys{/ICBVar/y ticks/.add code ={}{\ICByTickNum=0}}
 % colors is the named version for colorbar=
-\pgfkeys{/ICBVar/colors/.cd,.is choice,
-	invgray/.style = {/ICBVar/colorbar={0/white,1/black}},
-	gray/.style = {/ICBVar/colorbar={0/black,1/white}},
+\pgfkeys{/ICBVar/colors/.cd,.is choice,%
+	invgray/.style = {/ICBVar/colorbar={0/white,1/black}},%
+	gray/.style = {/ICBVar/colorbar={0/black,1/white}},%
 	hsv/.style = {/ICBVar/colorbar={0/red0hsb,.33/greenhsb,.66/bluehsb,%
-		1/red1hsb}},
+		1/red1hsb}},%
 	jet/.style = {/ICBVar/colorbar={0/blue!50!black,.125/blue,.375/cyan,%
-		.625/yellow,.875/red,1/red!50!black}},
-	rwb/.style = {/ICBVar/colorbar={0/red,.5/white,1/blue}}
+		.625/yellow,.875/red,1/red!50!black}},%
+	rwb/.style = {/ICBVar/colorbar={0/red,.5/white,1/blue}},%
+	parula/.style = {/ICBVar/colorbar={0/parula00,.125/parula0125,.25/parula025,.375/parula0375,.5/parula05,.625/parula0625,.75/parula075,.875/parula0875,1/parula10}}
 }
-
 % ---------
 %
 % Set default values for the main command \NodeColorbar
