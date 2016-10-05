@@ -3,6 +3,10 @@
 This small snippet adds the functionality to place a colorbar besides a 
 TikZ node and hence an image.
 
+In fact it's easier to employ `pgfplots` capability of producing colorbars
+and place the image in an `axis` environment. Also, `pgfplots` directly
+supports `viridis`, which is nice.
+
 ## Commands
 
 ### `\NodeColorbar`
